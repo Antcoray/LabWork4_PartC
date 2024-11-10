@@ -1,0 +1,1 @@
+clang++ -std=c++14 Task_4_Functions.c Task_4_TESTS.cpp -o TESTS -lgtest -lgtest_main -pthread
