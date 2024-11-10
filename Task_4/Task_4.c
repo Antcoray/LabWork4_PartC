@@ -1,72 +1,114 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int correctInputX() {
-  char input[50];
-  float number;
-  int integer;
-  char extra;
+void intro() {
+  printf("%s",
+         "Задание 4. Выполнил Колесников Антон Сергееевич. \n Эта программа "
+         "определяет диагональ с наибольшей суммой чисел в трехмерном \n"
+         "динамическом масссиве размера n^3\n введите n = 0 чтобы выйти\n");
+}
 
-  printf("Введите значение: ");
-  fgets(input, sizeof(input), stdin);
-  if (sscanf(input, "%f%c", &number, &extra) == 1) {
-    printf("Введено число: %.2f\n", number);
-    if ((int)number == number) {
-      integer = (int)number;
-      printf("Введено целое число: %d\n", integer);
-      if (integer >= 0) {
-        printf("Введено неотрицательное целое число: %d\n", integer);
-      } else {
-        printf("Введено отрицательное целое число.\n");
-      }
-    } else {
-      printf("Число является дробным.\n");
-    }
-  } else {
-    printf("Ошибка: введено не число.\n");
+int IntInputN() {
+  char answer[256];
+  int x = -1;
+
+  printf("%s", "Введите размер массива\n");
+  fgets(answer, sizeof(answer), stdin);
+
+  while (sscanf(answer, "%d", &x) != 1) {
+    printf("%s", "Некорректный ввод, введите размер массива\n");
+    fgets(answer, sizeof(answer), stdin);
   }
-  return 0;
+  return x;
+}
+
+int IntInputx(int i, int j, int k) {
+  char answer[256];
+  int x = -1;
+  printf("Введите элемент массива с индексами [%d][%d][%d]: ", i, j, k);
+  fgets(answer, sizeof(answer), stdin);
+  while (sscanf(answer, "%d", &x) != 1) {
+    printf(
+        "Некорректный ввод, введите элемент массива с индексами [%d][%d][%d]: ",
+        i, j, k);
+    fgets(answer, sizeof(answer), stdin);
+  }
+  return x;
 }
 
 int main() {
-  int n;
-  printf("Введите размер массива n: ");
-  scanf("%d", &n);
+  intro();
+  int n = -1;
 
-  int *array = (int *)malloc(n * sizeof(int **));
-  for (int i = 0; i < n; i++) {
+  do {
+    n = IntInputN();
+    if (n < 0) {
+      printf("Некорректный ввод, введите размер массива");
+    }
+  } while (n < 0);
+
+  int ***array = (int ***)malloc(n * sizeof(int **));
+  for (int i = 0; i < n; ++i) {
     array[i] = (int **)malloc(n * sizeof(int *));
-    for (int j = 0; j < n; j++) {
+    for (int j = 0; j < n; ++j) {
       array[i][j] = (int *)malloc(n * sizeof(int));
-      for (int k = 0; k < n; k++) {
-        array[i][j][k] = correctInputX();
+    }
+  }
+
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      for (int k = 0; k < n; ++k) {
+        do {
+          array[i][j][k] = IntInputx(i, j, k);
+          if (array[i][j][k] < 0) {
+            printf(
+                "Некорректный ввод, введите элемент массива с индексами "
+                "[%d][%d][%d]: ",
+                i, j, k);
+          }
+        } while (array[i][j][k] < 0);
       }
     }
   }
 
-  int maxSum = 0;
-
-  int sum1 = 0;
+  int max_sum = 0;
+  int max_diag_type = -1;
+  // Первая диагональ (0 тип) [0][0][0] -> [n-1][n-1][n-1]
+  int sum_main_diag = 0;
   for (int i = 0; i < n; i++) {
-    sum1 += array[i][i][i];
+    sum_main_diag += array[i][i][i];
   }
-  if (sum1 > maxSum) maxSum = sum1;
-
-  int sum2 = 0;
-  for (int i = 0; i < n; i++) {
-    sum2 += array[i][i][n - 1 - i];
+  if (sum_main_diag > max_sum) {
+    max_sum = sum_main_diag;
+    max_diag_type = 0;
   }
-  if (sum2 > maxSum) maxSum = sum2;
-
-  printf("Максимальная сумма диагонали: %d\n", maxSum);
-
+  // Обратная диагональ (1 тип) [n-1][0][0] -> [0][n-1][n-1]
+  int sum_reverse_diag = 0;
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
+    sum_reverse_diag += array[n - i - 1][i][i];
+  }
+  if (sum_reverse_diag > max_sum) {
+    max_sum = sum_reverse_diag;
+    max_diag_type = 1;
+  }
+
+  printf("Максимальная сумма диагонали: %d\n", max_sum);
+  if (max_diag_type == 0) {
+    printf(
+        "Эта сумма принадлежит главной диагонали [0][0][0] -> [%d][%d][%d]\n",
+        n - 1, n - 1, n - 1);
+  } else if (max_diag_type == 1) {
+    printf(
+        "Эта сумма принадлежит обратной диагонали [%d][0][0] -> [0][%d][%d]\n",
+        n - 1, n - 1, n - 1);
+  }
+
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < 0; ++j) {
       free(array[i][j]);
     }
     free(array[i]);
   }
   free(array);
-
   return 0;
 }
