@@ -125,11 +125,14 @@ void calculateMaxDiagonalSum(int ***array, int n) {
 int main() {
   intro();
   int n = -1;
-
+  while(1==1) {
   do {
     n = IntInputN();
     if (n < 0) {
       printf("Некорректный ввод, введите размер массива");
+    }
+    if(n == 0) {
+      return 0;
     }
   } while (n < 0);
 
@@ -153,5 +156,6 @@ int main() {
 
   calculateMaxDiagonalSum(array, n);
   freeArray(array, n);
+  }
   return 0;
 }
