@@ -61,13 +61,13 @@ void singlyEvenMagicSquare(int n, int **square) {
         for (int j = 0; j < halfN; j++) {
             int val = subSquare[i][j];
             square[i][j] = val;
-            square[i + halfN][j] = val + 2 * subSquareSize;
-            square[i][j + halfN] = val + 3 * subSquareSize;
+            square[i + halfN][j] = val + 3 * subSquareSize;
+            square[i][j + halfN] = val + 2 * subSquareSize;
             square[i + halfN][j + halfN] = val + subSquareSize;
         }
     }
 
-    int k = (n - 2) / 4;
+    /*int k = (n - 2) / 4;
     for (int i = 0; i < halfN; i++) {
         for (int j = 0; j < k; j++) {
             int temp = square[i][j];
@@ -86,7 +86,7 @@ void singlyEvenMagicSquare(int n, int **square) {
     int temp = square[k][k];
     square[k][k] = square[k + halfN][k];
     square[k + halfN][k] = temp;
-
+*/
     for (int i = 0; i < halfN; i++) {
         free(subSquare[i]);
     }
