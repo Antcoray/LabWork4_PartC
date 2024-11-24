@@ -10,12 +10,12 @@ void intro() {
 
 int IntInputN() {
   char answer[256];
-  int x = -1;
+  unsigned long int x = -1;
 
   printf("%s", "Введите порядок квадрата N\n");
   fgets(answer, sizeof(answer), stdin);
 
-  while (sscanf(answer, "%d", &x) != 1) {
+  while (sscanf(answer, "%lu", &x) != 1) {
     printf("%s", "Некорректный ввод, введите порядок квадрата N\n");
     fgets(answer, sizeof(answer), stdin);
   }
@@ -138,19 +138,19 @@ void freeSquare(int **square, int n) {
 int main() {
   intro();
   while (1 == 1) {
-    int n = -1;
+    unsigned long int n = -1;
     do {
       n = IntInputN();
-      if (n < 0) {
+      if (n > 4294967295) {
         printf("Некорректный ввод\n");
       }
-    } while (n < 0);
+    } while (n > 4294967295);
     if (n == 0) {
       return 0;
     }
     if (n == 2) {
       printf("NO\n");
-      return 0;
+      continue;
     }
 
     int **square = (int **)malloc(n * sizeof(int *));
