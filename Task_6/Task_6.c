@@ -1,5 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
+
+void intro() {
+  printf("%s",
+         "Задание 4. Выполнил Колесников Антон Сергееевич. \n Эта программа "
+         "генерирует магический квадрат заданного порядка N \n"
+         "введите N = 0 чтобы выйти\n");
+}
+
+int IntInputN() {
+  char answer[256];
+  int x = -1;
+
+  printf("%s", "Введите порядок квадрата N\n");
+  fgets(answer, sizeof(answer), stdin);
+
+  while (sscanf(answer, "%d", &x) != 1) {
+    printf("%s", "Некорректный ввод, введите порядок квадрата N\n");
+    fgets(answer, sizeof(answer), stdin);
+  }
+  return x;
+}
+
 // нечетное n
 void oddMagicSquare(int n, int **square) {
   int num = 1;
@@ -114,39 +136,47 @@ void freeSquare(int **square, int n) {
 }
 
 int main() {
-  int n;
-  printf("Введите порядок магического квадрата: ");
-  scanf("%d", &n);
-
-  if (n == 2) {
-    printf("NO\n");
-    return 0;
-  }
-
-  int **square = (int **)malloc(n * sizeof(int *));
-  for (int i = 0; i < n; i++) {
-    square[i] = (int *)malloc(n * sizeof(int));
-    for (int j = 0; j < n; j++) {
-      square[i][j] = 0;
+  intro();
+  while (1 == 1) {
+    int n = -1;
+    do {
+      n = IntInputN();
+      if (n < 0) {
+        printf("Некорректный ввод\n");
+      }
+    } while (n < 0);
+    if (n == 0) {
+      return 0;
     }
-  }
-
-  if (n % 2 != 0) {
-    oddMagicSquare(n, square);
-  } else if (n % 4 == 0) {
-    doublyEvenMagicSquare(n, square);
-  } else {
-    singlyEvenMagicSquare(n, square);
-  }
-
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < n; j++) {
-      printf("%d ", square[i][j]);
+    if (n == 2) {
+      printf("NO\n");
+      return 0;
     }
-    printf("\n");
+
+    int **square = (int **)malloc(n * sizeof(int *));
+    for (int i = 0; i < n; i++) {
+      square[i] = (int *)malloc(n * sizeof(int));
+      for (int j = 0; j < n; j++) {
+        square[i][j] = 0;
+      }
+    }
+
+    if (n % 2 != 0) {
+      oddMagicSquare(n, square);
+    } else if (n % 4 == 0) {
+      doublyEvenMagicSquare(n, square);
+    } else {
+      singlyEvenMagicSquare(n, square);
+    }
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        printf("%d ", square[i][j]);
+      }
+      printf("\n");
+    }
+
+    freeSquare(square, n);
   }
-
-  freeSquare(square, n);
-
   return 0;
 }
