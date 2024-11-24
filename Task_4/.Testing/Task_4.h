@@ -1,7 +1,3 @@
-#ifndef TASK_4_H
-#define TASK_4_H
+#pragma once
 
 int findMaxSum(int n, int s);
-
-
-#endif
